@@ -3,7 +3,11 @@
 set -e
 
 echo "Install Chromium Browser"
+
+echo "First need to install snapd"
 apt-get update 
+apt-get install -y snapd
+
 apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg
 apt-get clean -y
 ln -s /usr/bin/chromium-browser /usr/bin/google-chrome

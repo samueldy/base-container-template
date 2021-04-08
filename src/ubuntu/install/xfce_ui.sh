@@ -4,6 +4,6 @@ set -e
 
 echo "Install Xfce4 UI components"
 apt-get update 
-apt-get install -y supervisor xfce4 xfce4-terminal xterm
+apt-get install -y supervisor xfce4 xfce4-terminal xterm mousepad speedcrunch viewnior qalculate-gtk engrampa gtkhash gedit meld gimp inkscape mupdf okular openssh-client filezilla
 apt-get purge -y pm-utils xscreensaver*
-apt-get clean -y
+apt-get clean -y    

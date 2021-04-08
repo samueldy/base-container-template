@@ -69,7 +69,7 @@ sudo usermod -aG users default
 #sudo chown -R default:$(id -g) /headless/.cache/
 
 ## Enable RDP
-sudo service xrdp start
+# sudo service xrdp start
 
 ## write correct window size to chrome properties
 $STARTUPDIR/chrome-init.sh
