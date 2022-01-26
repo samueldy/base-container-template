@@ -26,32 +26,37 @@ ENV HOME=/headless \
     VNC_VIEW_ONLY=false
 WORKDIR $HOME
 
+### Install some common tools
+ADD ./src/ubuntu/install/tools.sh $INST_SCRIPTS/
+RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
+RUN $INST_SCRIPTS/tools.sh
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+### Install xfce UI
+ADD ./src/ubuntu/install/ $INST_SCRIPTS/
+RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
+RUN $INST_SCRIPTS/xfce_ui.sh
+ADD ./src/common/xfce/ $HOME/
+
+# Install the latest firefox from the repos
+RUN apt-get install -y firefox
+
+### Install custom fonts
+# RUN $INST_SCRIPTS/install_custom_fonts.sh
+
 ### Add all install scripts for further steps
 ADD ./src/common/install/ $INST_SCRIPTS/
 ADD ./src/ubuntu/install/ $INST_SCRIPTS/
 RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
 
-### Install some common tools
-RUN $INST_SCRIPTS/tools.sh
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
-
-### Install xfce UI
-RUN $INST_SCRIPTS/xfce_ui.sh
-ADD ./src/common/xfce/ $HOME/
-
-### Install custom fonts
-# RUN $INST_SCRIPTS/install_custom_fonts.sh
-
 ### Install xvnc-server & noVNC - HTML5 based VNC viewer
+RUN echo
 RUN $INST_SCRIPTS/tigervnc.sh
 RUN $INST_SCRIPTS/no_vnc.sh
 
 ### Install firefox and chrome browser
 # RUN $INST_SCRIPTS/firefox.sh
 # RUN $INST_SCRIPTS/chrome.sh
-
-# Install the latest firefox from the repos
-RUN apt-get install -y firefox
 
 ### configure startup
 RUN $INST_SCRIPTS/libnss_wrapper.sh
@@ -65,6 +70,9 @@ RUN apt-get autoremove -y
 
 RUN chmod 666 /etc/passwd
 RUN chgrp 100 /etc/passwd
+
+# Forcefully mitigate CVE-2021-4034.
+RUN chmod 0755 /usr/bin/pkexec
 
 RUN echo "%users	  ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
