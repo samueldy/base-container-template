@@ -76,6 +76,9 @@ RUN chmod 0755 /usr/bin/pkexec
 
 RUN echo "%users	  ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# symlink /users to /home. Apparently Badger needs this
+RUN ln -s /home /users
+
 USER 1000
 
 # EXPOSE 3389
